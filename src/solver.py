@@ -45,7 +45,8 @@ class Solver(object):
                                  legend=['train loss', 'cv loss'])
             self.vis_window = None
             self.vis_epochs = torch.arange(1, self.epochs + 1)
-
+        
+        self.switch_rec = []
         self._reset()
 
     def _reset(self):
@@ -74,7 +75,8 @@ class Solver(object):
             print("Training...")
             self.model.train()  # Turn on BatchNorm & Dropout
             start = time.time()
-            tr_avg_loss = self._run_one_epoch(epoch)
+            tr_avg_loss, switch_cnt = self._run_one_epoch(epoch)
+            self.switch_rec.append(switch_cnt)
             print('-' * 85)
             print('Train Summary | End of Epoch {0} | Time {1:.2f}s | '
                   'Train Loss {2:.3f}'.format(
@@ -95,7 +97,7 @@ class Solver(object):
             # Cross validation
             print('Cross validation...')
             self.model.eval()  # Turn off Batchnorm & Dropout
-            val_loss = self._run_one_epoch(epoch, cross_valid=True)
+            val_loss, _ = self._run_one_epoch(epoch, cross_valid=True)
             print('-' * 85)
             print('Valid Summary | End of Epoch {0} | Time {1:.2f}s | '
                   'Valid Loss {2:.3f}'.format(
@@ -155,10 +157,15 @@ class Solver(object):
                         win=self.vis_window,
                         update='replace',
                     )
+        with open('Switching_record.txt', 'w') as f:
+            f.write('[Epoch]_[Switch count]')
+            for i, num in enumerate(self.switch_rec):
+                f.write(f'{i}_{num}')
 
     def _run_one_epoch(self, epoch, cross_valid=False):
         start = time.time()
         total_loss = 0
+        switch_cnt = 0
 
         data_loader = self.tr_loader if not cross_valid else self.cv_loader
 
@@ -177,7 +184,7 @@ class Solver(object):
                 mixture_lengths = mixture_lengths.cuda()
                 padded_source = padded_source.cuda()
             estimate_source = self.model(padded_mixture)
-            loss, max_snr, estimate_source, reorder_estimate_source = \
+            loss, max_snr, estimate_source, reorder_estimate_source, switching = \
                 cal_loss(padded_source, estimate_source, mixture_lengths, self.pit)
             if not cross_valid:
                 self.optimizer.zero_grad()
@@ -187,6 +194,7 @@ class Solver(object):
                 self.optimizer.step()
 
             total_loss += loss.item()
+            switch_cnt += 1 if switching
 
             if i % self.print_freq == 0:
                 print('Epoch {0} | Iter {1} | Average Loss {2:.3f} | '
@@ -208,4 +216,4 @@ class Solver(object):
                         self.vis.line(X=x_axis, Y=y_axis, win=vis_window_epoch,
                                       update='replace')
 
-        return total_loss / (i + 1)
+        return total_loss / (i + 1), switch_cnt
