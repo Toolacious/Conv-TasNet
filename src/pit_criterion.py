@@ -23,7 +23,10 @@ def cal_loss(source, estimate_source, source_lengths, PIT = True):
                                                       source_lengths)
         loss = 0 - torch.mean(max_snr)
         reorder_estimate_source = reorder_source(estimate_source, perms, max_snr_idx)
-        return loss, max_snr, estimate_source, reorder_estimate_source
+        source[:, :, :] = reorder_source(source, perms, max_snr_idx)
+        switching = True if max_snr_idx != 0 else False
+        
+        return loss, max_snr, estimate_source, reorder_estimate_source, switching
     else:
         si_snr = cal_si_snr(source, estimate_source, source_lengths)
         loss = 0 - torch.mean(si_snr)
