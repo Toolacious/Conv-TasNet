@@ -46,7 +46,7 @@ class Solver(object):
             self.vis_window = None
             self.vis_epochs = torch.arange(1, self.epochs + 1)
         
-        self.switch_rec = []
+        self.idx_rec = {}
         self._reset()
 
     def _reset(self):
@@ -76,8 +76,7 @@ class Solver(object):
             self.model.train()  # Turn on BatchNorm & Dropout
             start = time.time()
             tr_avg_loss, switch_cnt = self._run_one_epoch(epoch)
-            self.switch_rec.append(switch_cnt)
-            print(switch_cnt)
+            print('Switch Count: %d.' % switch_cnt)
             with open(f'Switching_record_{self.pit}.txt', 'a') as f:
                 f.write(f'{epoch}_{switch_cnt}\n')
             print('-' * 85)
