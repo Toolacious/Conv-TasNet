@@ -78,8 +78,8 @@ class Solver(object):
             tr_avg_loss, switch_cnt = self._run_one_epoch(epoch)
             self.switch_rec.append(switch_cnt)
             print(switch_cnt)
-            with open('Switching_record.txt', 'w') as f:
-                f.write(f'{epoch}_{switch_cnt}')
+            with open(f'Switching_record_{self.pit}.txt', 'a') as f:
+                f.write(f'{epoch}_{switch_cnt}\n')
             print('-' * 85)
             print('Train Summary | End of Epoch {0} | Time {1:.2f}s | '
                   'Train Loss {2:.3f}'.format(
@@ -193,7 +193,7 @@ class Solver(object):
                 self.optimizer.step()
 
             total_loss += loss.item()
-            if not cross_valid:
+            if not cross_valid and self.pit:
                 switching = 0
                 if number in self.idx_rec.keys():
                     for (idx_orig, idx_new) in zip(self.idx_rec[number], idx):
