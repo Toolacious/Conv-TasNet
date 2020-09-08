@@ -194,7 +194,7 @@ class Solver(object):
                 self.optimizer.step()
 
             total_loss += loss.item()
-            switch_cnt += 1 if switching
+            switch_cnt = switch + 1 if switching else switch
 
             if i % self.print_freq == 0:
                 print('Epoch {0} | Iter {1} | Average Loss {2:.3f} | '
