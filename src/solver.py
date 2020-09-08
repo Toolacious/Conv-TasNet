@@ -78,6 +78,8 @@ class Solver(object):
             tr_avg_loss, switch_cnt = self._run_one_epoch(epoch)
             self.switch_rec.append(switch_cnt)
             print(switch_cnt)
+            with open('Switching_record.txt', 'w') as f:
+                f.write(f'{epoch}_{switch_cnt}')
             print('-' * 85)
             print('Train Summary | End of Epoch {0} | Time {1:.2f}s | '
                   'Train Loss {2:.3f}'.format(
@@ -158,10 +160,6 @@ class Solver(object):
                         win=self.vis_window,
                         update='replace',
                     )
-        with open('Switching_record.txt', 'w') as f:
-            f.write('[Epoch]_[Switch count]')
-            for i, num in enumerate(self.switch_rec):
-                f.write(f'{i}_{num}')
 
     def _run_one_epoch(self, epoch, cross_valid=False):
         start = time.time()
