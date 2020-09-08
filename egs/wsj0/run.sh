@@ -114,45 +114,43 @@ if [ $stage -le 2 ]; then
   echo "Stage 2: Training"
   echo "pit"
   echo $pit
-  ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
-    CUDA_VISIBLE_DEVICES="$id" \
-    train.py \
-    --train_dir $train_dir \
-    --valid_dir $valid_dir \
-    --sample_rate $sample_rate \
-    --segment $segment \
-    --cv_maxlen $cv_maxlen \
-    --N $N \
-    --L $L \
-    --B $B \
-    --H $H \
-    --P $P \
-    --X $X \
-    --R $R \
-    --C $C \
-    --norm_type $norm_type \
-    --causal $causal \
-    --mask_nonlinear $mask_nonlinear \
-    --use_cuda $use_cuda \
-    --epochs $epochs \
-    --half_lr $half_lr \
-    --early_stop $early_stop \
-    --max_norm $max_norm \
-    --shuffle $shuffle \
-    --batch_size $batch_size \
-    --num_workers $num_workers \
-    --optimizer $optimizer \
-    --lr $lr \
-    --momentum $momentum \
-    --l2 $l2 \
-    --save_folder ${expdir} \
-    --checkpoint $checkpoint \
-    --continue_from "$continue_from" \
-    --print_freq ${print_freq} \
-    --visdom $visdom \
-    --visdom_epoch $visdom_epoch \
-    --visdom_id "$visdom_id" \
-    $pit_command
+  train.py \
+  --train_dir $train_dir \
+  --valid_dir $valid_dir \
+  --sample_rate $sample_rate \
+  --segment $segment \
+  --cv_maxlen $cv_maxlen \
+  --N $N \
+  --L $L \
+  --B $B \
+  --H $H \
+  --P $P \
+  --X $X \
+  --R $R \
+  --C $C \
+  --norm_type $norm_type \
+  --causal $causal \
+  --mask_nonlinear $mask_nonlinear \
+  --use_cuda $use_cuda \
+  --epochs $epochs \
+  --half_lr $half_lr \
+  --early_stop $early_stop \
+  --max_norm $max_norm \
+  --shuffle $shuffle \
+  --batch_size $batch_size \
+  --num_workers $num_workers \
+  --optimizer $optimizer \
+  --lr $lr \
+  --momentum $momentum \
+  --l2 $l2 \
+  --save_folder ${expdir} \
+  --checkpoint $checkpoint \
+  --continue_from "$continue_from" \
+  --print_freq ${print_freq} \
+  --visdom $visdom \
+  --visdom_epoch $visdom_epoch \
+  --visdom_id "$visdom_id" \
+  $pit_command
 fi
 
 
