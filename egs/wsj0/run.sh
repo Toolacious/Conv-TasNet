@@ -9,8 +9,8 @@
 # After that, modify `data` and run from stage 2.
 # wsj0_origin=/home/ktxu/workspace/data/CSR-I-WSJ0-LDC93S6A
 # wsj0_wav=/home/ktxu/workspace/data/wsj0-wav/wsj0
-data=min
-stage=1 # Modify this to control to start from which stage
+data=../../../min
+stage=2 # Modify this to control to start from which stage
 # -- END
 
 dumpdir=data  # directory to put generated json file
