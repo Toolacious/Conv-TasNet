@@ -243,7 +243,7 @@ def load_mixtures_and_sources(batch):
         T varies from item to item.
     """
     mixtures, sources = [], []
-    mix_infos, s1_infos, s2_infos, sample_rate, segment_len = batch
+    mix_infos, s1_infos, s2_infos, sample_rate, segment_len, _ = batch
     # for each utterance
     for mix_info, s1_info, s2_info in zip(mix_infos, s1_infos, s2_infos):
         mix_path = mix_info[0]
