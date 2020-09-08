@@ -77,6 +77,7 @@ class Solver(object):
             start = time.time()
             tr_avg_loss, switch_cnt = self._run_one_epoch(epoch)
             self.switch_rec.append(switch_cnt)
+            print(switch_cnt)
             print('-' * 85)
             print('Train Summary | End of Epoch {0} | Time {1:.2f}s | '
                   'Train Loss {2:.3f}'.format(
@@ -194,7 +195,8 @@ class Solver(object):
                 self.optimizer.step()
 
             total_loss += loss.item()
-            switch_cnt = switch + 1 if switching else switch
+            print(switching)
+            switch_cnt += switching
 
             if i % self.print_freq == 0:
                 print('Epoch {0} | Iter {1} | Average Loss {2:.3f} | '
