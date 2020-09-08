@@ -25,7 +25,7 @@ def cal_loss(source, estimate_source, source_lengths, PIT = True):
         reorder_estimate_source = reorder_source(estimate_source, perms, max_snr_idx)
         source[:, :, :] = reorder_source(source, perms, max_snr_idx)
         switching = 0
-        for idx max_snr_idx:
+        for idx in max_snr_idx:
             if idx != 0:
                 switching += 1
         
