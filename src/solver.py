@@ -177,13 +177,13 @@ class Solver(object):
             vis_iters_loss = torch.Tensor(len(data_loader))
 
         for i, (data) in enumerate(data_loader):
-            padded_mixture, mixture_lengths, padded_source = data
+            padded_mixture, mixture_lengths, padded_source, number = data
             if self.use_cuda:
                 padded_mixture = padded_mixture.cuda()
                 mixture_lengths = mixture_lengths.cuda()
                 padded_source = padded_source.cuda()
             estimate_source = self.model(padded_mixture)
-            loss, max_snr, estimate_source, reorder_estimate_source, switching = \
+            loss, max_snr, estimate_source, reorder_estimate_source, idx = \
                 cal_loss(padded_source, estimate_source, mixture_lengths, self.pit)
             if not cross_valid:
                 self.optimizer.zero_grad()
@@ -193,8 +193,15 @@ class Solver(object):
                 self.optimizer.step()
 
             total_loss += loss.item()
-            print(switching)
-            switch_cnt += switching
+            if not cross_valid:
+                switching = 0
+                if number in self.idx_rec.keys():
+                    for (idx_orig, idx_new) in zip(self.idx_rec[number], idx):
+                        if idx_orig != idx_new:
+                            switching += 1
+                self.idx_rec[number] = idx
+                print(switching)
+                switch_cnt += switching
 
             if i % self.print_freq == 0:
                 print('Epoch {0} | Iter {1} | Average Loss {2:.3f} | '
