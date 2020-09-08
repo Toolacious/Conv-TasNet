@@ -87,7 +87,7 @@ class AudioDataset(data.Dataset):
                     end += 1
                 if len(part_mix) > 0:
                     minibatch.append([part_mix, part_s1, part_s2,
-                                      sample_rate, segment_len])
+                                      sample_rate, segment_len, len(minibatch)])
                 if end == len(sorted_mix_infos):
                     break
                 start = end
@@ -105,7 +105,7 @@ class AudioDataset(data.Dataset):
                 minibatch.append([sorted_mix_infos[start:end],
                                   sorted_s1_infos[start:end],
                                   sorted_s2_infos[start:end],
-                                  sample_rate, segment])
+                                  sample_rate, segment, len(minibatch)])
                 if end == len(sorted_mix_infos):
                     break
                 start = end
@@ -153,7 +153,7 @@ def _collate_fn(batch):
                             for s in sources], pad_value)
     # N x T x C -> N x C x T
     sources_pad = sources_pad.permute((0, 2, 1)).contiguous()
-    return mixtures_pad, ilens, sources_pad
+    return mixtures_pad, ilens, sources_pad, batch[0][5]
 
 
 # Eval data part
