@@ -56,8 +56,8 @@ l2=0
 checkpoint=0
 continue_from=""
 print_freq=10
-visdom=1
-visdom_epoch=1
+visdom=0
+visdom_epoch=0
 visdom_id="Conv-TasNet Training"
 # evaluate
 ev_use_cuda=1
@@ -114,8 +114,8 @@ if [ $stage -le 2 ]; then
   echo "Stage 2: Training"
   echo "pit"
   echo $pit
-  ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
-    CUDA_VISIBLE_DEVICES="$id" \
+  # ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
+    # CUDA_VISIBLE_DEVICES="$id" \
     train.py \
     --train_dir $train_dir \
     --valid_dir $valid_dir \
