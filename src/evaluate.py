@@ -52,18 +52,16 @@ def evaluate(args):
         for i, (data) in enumerate(data_loader):
             # Get batch data
             padded_mixture, mixture_lengths, padded_source, num = data
-	    print(num)
+            print(num)
             if args.use_cuda:
                 padded_mixture = padded_mixture.cuda()
                 mixture_lengths = mixture_lengths.cuda()
                 padded_source = padded_source.cuda()
-		print('using cuda.')
             # Forward
             estimate_source = model(padded_mixture)  # [B, C, T]
-	    print(estimate_source)
+            print(estimate_source)
             loss, max_snr, estimate_source, reorder_estimate_source, _ = \
                 cal_loss(padded_source, estimate_source, mixture_lengths, args.pit)
-	    print('cal_loss done.')
             # Remove padding and flat
             mixture = remove_pad(padded_mixture, mixture_lengths)
             source = remove_pad(padded_source, mixture_lengths)

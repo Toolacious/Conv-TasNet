@@ -10,7 +10,7 @@
 # wsj0_origin=/home/ktxu/workspace/data/CSR-I-WSJ0-LDC93S6A
 # wsj0_wav=/home/ktxu/workspace/data/wsj0-wav/wsj0
 data=../../../min
-stage=2 # Modify this to control to start from which stage
+stage=3 # Modify this to control to start from which stage
 # -- END
 
 dumpdir=data  # directory to put generated json file
@@ -42,7 +42,7 @@ epochs=100
 half_lr=1
 early_stop=1
 max_norm=5
-pit=1
+pit=0
 # minibatch
 shuffle=1
 batch_size=30
@@ -54,7 +54,7 @@ momentum=0
 l2=0
 # save and visualize
 checkpoint=1
-continue_from=""
+continue_from="exp/train_r8000_N128_L40_B128_H256_P3_X7_R1_C2_gLN_causal0_relu_epoch100_half1_norm5_bs30_worker8_pit1_adam_lr1e-3_mmt0_l20_tr/epoch5.pth.tar"
 print_freq=10
 visdom=0
 visdom_epoch=0
@@ -158,7 +158,7 @@ fi
 
 if [ $stage -le 3 ]; then
   echo "Stage 3: Evaluate separation performance"
-  ${decode_cmd} --gpu ${ngpu} ${expdir}/evaluate.log \
+  # ${decode_cmd} --gpu ${ngpu} ${expdir}/evaluate.log \
     evaluate.py \
     --model_path ${expdir}/final.pth.tar \
     --data_dir $evaluate_dir \
