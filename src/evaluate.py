@@ -59,7 +59,6 @@ def evaluate(args):
                 padded_source = padded_source.cuda()
             # Forward
             estimate_source = model(padded_mixture)  # [B, C, T]
-            print(estimate_source)
             loss, max_snr, estimate_source, reorder_estimate_source, _ = \
                 cal_loss(padded_source, estimate_source, mixture_lengths, args.pit)
             # Remove padding and flat
