@@ -46,6 +46,8 @@ class Solver(object):
             self.vis_window = None
             self.vis_epochs = torch.arange(1, self.epochs + 1)
         
+        self.tr_data_rec = {}
+        self.cv_data_rec = {}
         self.idx_rec = {}
         self._reset()
 
@@ -69,6 +71,19 @@ class Solver(object):
         self.val_no_impv = 0
 
     def train(self):
+        # Load preprocessed dataset once
+        # train set
+        data_loader = self.tr_loader
+        for i, data in enumerate(data_loader):
+            padded_mixture, mixture_lengths, padded_source, number = data
+            self.tr_data_rec[number] = data
+            
+        # cross validation set
+        data_loader = self.cv_loader
+        for i, data in enumerate(data_loader):
+            padded_mixture, mixture_lengths, padded_source, number = data
+            self.cv_data_rec[number] = data
+        
         # Train model multi-epoches
         for epoch in range(self.start_epoch, self.epochs):
             # Train one epoch
@@ -166,6 +181,7 @@ class Solver(object):
         switch_cnt = 0
 
         data_loader = self.tr_loader if not cross_valid else self.cv_loader
+        data_rec = self.tr_data_rec if not cross_valid else self.cv_data_rec
 
         # visualizing loss using visdom
         if self.visdom_epoch and not cross_valid:
@@ -175,7 +191,10 @@ class Solver(object):
             vis_iters = torch.arange(1, len(data_loader) + 1)
             vis_iters_loss = torch.Tensor(len(data_loader))
 
-        for i, (data) in enumerate(data_loader):
+        # for i, (data) in enumerate(data_loader):
+        idx_rand = random.permutation(len(data_loader))
+        for idx in idx_rand:
+            data = data_rec[idx]
             padded_mixture, mixture_lengths, padded_source, number = data
             if self.use_cuda:
                 padded_mixture = padded_mixture.cuda()
